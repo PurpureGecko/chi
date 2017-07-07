@@ -671,8 +671,9 @@ func TestMuxRouteGroups(t *testing.T) {
 
 }
 
-func TestMuxBig(t *testing.T) {
+func muxBig() Router {
 	var r, sr1, sr2, sr3, sr4, sr5, sr6 *Mux
+
 	r = NewRouter()
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -799,8 +800,11 @@ func TestMuxBig(t *testing.T) {
 			})
 		})
 	})
+	return r
+}
 
-	ts := httptest.NewServer(r)
+func TestMuxBig(t *testing.T) {
+	ts := httptest.NewServer(muxBig())
 	defer ts.Close()
 
 	var body, expected string
